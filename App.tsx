@@ -106,19 +106,16 @@ export default function App() {
       unlockedBadges: newBadges
     });
 
-    const NEXT_TURN_DELAY = newBadges.length > 0 ? 5000 : 4000; // Extra time to celebrate badges
+    // Automatic progression removed to allow reading time
+  };
 
-    // Advance Turn
+  const handleProceed = () => {
+    playClickSound();
+    setTurnResult(null);
     if (currentTeamIndex < numTeams - 1) {
-      setTimeout(() => {
-        setTurnResult(null);
-        setCurrentTeamIndex(prev => prev + 1);
-      }, NEXT_TURN_DELAY);
+      setCurrentTeamIndex(prev => prev + 1);
     } else {
-      setTimeout(() => {
-        setTurnResult(null);
-        endRound();
-      }, NEXT_TURN_DELAY);
+      endRound();
     }
   };
 
@@ -221,6 +218,7 @@ export default function App() {
 
     if (turnResult) {
       const gradientColors = turnResult.teamColor.replace('bg-', 'from-').replace('border-', 'to-');
+      const isLastTeam = currentTeamIndex === numTeams - 1;
       
       return (
         <div className="flex flex-col items-center justify-center min-h-[50vh] animate-fade-in w-full px-4">
@@ -264,7 +262,7 @@ export default function App() {
                  )}
 
                  {/* Impact Metrics */}
-                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl border-t border-slate-800 pt-8">
+                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl border-t border-slate-800 pt-8 mb-8">
                      {[
                        { label: 'Revenue', value: turnResult.impact.revenue, isCurrency: true },
                        { label: 'Customers', value: turnResult.impact.customers },
@@ -280,6 +278,14 @@ export default function App() {
                         </div>
                      ))}
                  </div>
+
+                 {/* Proceed Button */}
+                 <button 
+                    onClick={handleProceed}
+                    className="bg-white text-slate-900 hover:bg-slate-200 font-bold text-xl py-4 px-12 rounded-full transition-all hover:scale-105 shadow-lg flex items-center gap-2"
+                 >
+                    {isLastTeam ? "Finish Round" : "Next Team"} <ChevronRight size={24} />
+                 </button>
               </div>
            </div>
         </div>
