@@ -55,7 +55,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ teams, currentTeamId }) =>
                  {/* Progress Bars */}
                  <div className="mt-2 space-y-2">
                     <div>
-                      <div className="flex justify-between text-xs text-slate-500 mb-1">
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>Infrastructure</span>
                         <span>{team.metrics.infrastructure}%</span>
                       </div>
@@ -67,7 +67,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ teams, currentTeamId }) =>
                       </div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-xs text-slate-500 mb-1">
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>Brand</span>
                         <span>{team.metrics.brandAwareness}%</span>
                       </div>

@@ -5,7 +5,7 @@ import { Dashboard } from './components/Dashboard';
 import { StatsCard } from './components/StatsCard';
 import { generateMarketAnalysis } from './services/geminiService';
 import { playMoneySound, playLossSound, playMilestoneSound, playStartSound, playClickSound } from './services/soundService';
-import { Play, RotateCcw, Users as UsersIcon, Settings, ChevronRight, TrendingUp, TrendingDown, Award } from 'lucide-react';
+import { Play, RotateCcw, Users as UsersIcon, Settings, ChevronRight, TrendingUp, TrendingDown, Award, Crown, Sparkles, Star } from 'lucide-react';
 
 interface TurnResult {
   teamName: string;
@@ -170,7 +170,7 @@ export default function App() {
                 className={`w-20 h-20 text-3xl font-bold rounded-2xl transition-all ${
                   numTeams === n 
                   ? 'bg-blue-600 text-white shadow-lg scale-110' 
-                  : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white'
                 }`}
               >
                 {n}
@@ -181,7 +181,7 @@ export default function App() {
 
         <button
           onClick={startGame}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white text-2xl font-bold py-4 px-12 rounded-full transition-all hover:scale-105 flex items-center gap-3 mx-auto"
+          className="bg-emerald-700 hover:bg-emerald-600 text-white text-2xl font-bold py-4 px-12 rounded-full transition-all hover:scale-105 flex items-center gap-3 mx-auto"
         >
           <Play size={32} /> Start Simulation
         </button>
@@ -204,7 +204,7 @@ export default function App() {
         </p>
         <button
           onClick={() => { playClickSound(); setPhase(GamePhase.TEAM_TURN); }}
-          className="bg-blue-600 hover:bg-blue-500 text-white text-xl font-bold py-4 px-10 rounded-xl transition-all flex items-center gap-2"
+          className="bg-blue-700 hover:bg-blue-600 text-white text-xl font-bold py-4 px-10 rounded-xl transition-all flex items-center gap-2"
         >
           Begin Decision Phase <ChevronRight size={24} />
         </button>
@@ -270,7 +270,7 @@ export default function App() {
                        { label: 'Brand', value: turnResult.impact.brandAwareness }
                      ].map((metric, idx) => (
                         <div key={idx} className={`flex flex-col items-center ${metric.value === 0 ? 'opacity-30 grayscale' : ''}`}>
-                           <span className="text-xs font-bold text-slate-500 uppercase mb-1">{metric.label}</span>
+                           <span className="text-xs font-bold text-slate-400 uppercase mb-1">{metric.label}</span>
                            <div className={`flex items-center text-xl font-mono font-bold ${metric.value > 0 ? 'text-green-400' : metric.value < 0 ? 'text-red-400' : 'text-slate-500'}`}>
                               {metric.value !== 0 && (metric.value > 0 ? <TrendingUp size={16} className="mr-1" /> : <TrendingDown size={16} className="mr-1" />)}
                               {metric.value > 0 ? '+' : ''}{metric.isCurrency ? '$' : ''}{metric.value}
@@ -313,7 +313,7 @@ export default function App() {
               <p className="text-slate-400 text-lg leading-relaxed">{choice.description}</p>
               
               <div className="mt-6 pt-4 border-t border-slate-700/50">
-                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Projected Impact</span>
+                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Projected Impact</span>
                 <div className="flex gap-4 mt-2 text-sm">
                    {choice.impact.revenue > 0 && <span className="text-green-400">High Rev</span>}
                    {choice.impact.customers > 0 && <span className="text-blue-400">New Cust</span>}
@@ -372,7 +372,7 @@ export default function App() {
 
         <button
           onClick={nextRound}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white text-xl font-bold py-4 px-12 rounded-full transition-all shadow-lg hover:shadow-emerald-500/20"
+          className="bg-emerald-700 hover:bg-emerald-600 text-white text-xl font-bold py-4 px-12 rounded-full transition-all shadow-lg hover:shadow-emerald-500/20"
         >
           Proceed to Next Round
         </button>
@@ -382,36 +382,102 @@ export default function App() {
 
   const renderGameOver = () => {
     const sortedTeams = [...teams].sort((a, b) => b.metrics.revenue - a.metrics.revenue);
-    const winner = sortedTeams[0];
-
+    
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] animate-fade-in">
-        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500 mb-4">
-          Simulation Complete
-        </h1>
-        <p className="text-2xl text-slate-400 mb-12">Final Market Results</p>
-
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 p-10 rounded-3xl border border-slate-700 shadow-2xl text-center mb-12 max-w-2xl w-full relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
-          <p className="text-slate-400 uppercase tracking-widest font-bold mb-4">The Winner Is</p>
-          <h2 className="text-5xl font-bold text-white mb-6">{winner.name}</h2>
-          <div className="grid grid-cols-2 gap-8 text-left max-w-md mx-auto">
-             <div>
-                <p className="text-slate-500 text-sm">Total Revenue</p>
-                <p className="text-2xl font-mono text-green-400 font-bold">${winner.metrics.revenue.toLocaleString()}</p>
-             </div>
-             <div>
-                <p className="text-slate-500 text-sm">Customer Base</p>
-                <p className="text-2xl font-mono text-blue-400 font-bold">{winner.metrics.customers.toLocaleString()}</p>
-             </div>
+      <div className="flex flex-col items-center justify-center min-h-[85vh] animate-fade-in w-full pb-10">
+        
+        {/* Celebration Header */}
+        <div className="text-center mb-10 relative">
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-lg h-32 bg-yellow-500/20 blur-3xl rounded-full pointer-events-none"></div>
+          <div className="flex items-center justify-center gap-4 mb-2">
+             <Sparkles className="text-yellow-400 animate-pulse" size={32} />
+             <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-500 to-red-500">
+               Simulation Complete!
+             </h1>
+             <Sparkles className="text-yellow-400 animate-pulse" size={32} />
           </div>
+          <p className="text-2xl text-slate-400">Final Market Standings & Achievements</p>
+        </div>
+
+        {/* Leaderboard Grid */}
+        <div className="grid grid-cols-1 gap-6 w-full max-w-5xl mb-12">
+          {sortedTeams.map((team, index) => {
+             const isWinner = index === 0;
+             return (
+              <div 
+                key={team.id} 
+                className={`relative flex flex-col md:flex-row items-center md:items-stretch bg-slate-800 rounded-2xl border transition-all duration-500 ${
+                  isWinner 
+                  ? 'border-yellow-500 shadow-[0_0_30px_rgba(234,179,8,0.2)] scale-105 z-10' 
+                  : 'border-slate-700 opacity-90'
+                }`}
+              >
+                 {/* Rank Section */}
+                 <div className={`flex flex-col items-center justify-center p-6 w-full md:w-32 ${isWinner ? 'bg-gradient-to-b from-yellow-500/20 to-transparent' : 'bg-slate-800'} rounded-l-2xl border-r border-slate-700/50`}>
+                    {isWinner ? <Crown size={40} className="text-yellow-400 mb-2 drop-shadow-lg" /> : <span className="text-3xl font-bold text-slate-500">#{index + 1}</span>}
+                    {isWinner && <span className="text-xs font-bold text-yellow-500 uppercase tracking-widest">Winner</span>}
+                 </div>
+
+                 {/* Team Info */}
+                 <div className="flex-1 p-6 flex flex-col justify-center border-r border-slate-700/50 w-full">
+                    <div className="flex items-center gap-3 mb-3">
+                       <div className={`w-4 h-4 rounded-full ${team.color.split(' ')[0]}`}></div>
+                       <h2 className={`text-3xl font-bold ${isWinner ? 'text-white' : 'text-slate-200'}`}>{team.name}</h2>
+                    </div>
+                    
+                    {/* Metrics Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                       <div>
+                          <p className="text-slate-400 text-xs uppercase">Revenue</p>
+                          <p className="text-lg font-mono font-bold text-green-400">${team.metrics.revenue.toLocaleString()}</p>
+                       </div>
+                       <div>
+                          <p className="text-slate-400 text-xs uppercase">Customers</p>
+                          <p className="text-lg font-mono font-bold text-blue-400">{team.metrics.customers.toLocaleString()}</p>
+                       </div>
+                       <div>
+                          <p className="text-slate-400 text-xs uppercase">Infra</p>
+                          <p className="text-lg font-mono font-bold text-slate-300">{team.metrics.infrastructure}%</p>
+                       </div>
+                       <div>
+                          <p className="text-slate-400 text-xs uppercase">Brand</p>
+                          <p className="text-lg font-mono font-bold text-slate-300">{team.metrics.brandAwareness}%</p>
+                       </div>
+                    </div>
+                 </div>
+
+                 {/* Badges Section */}
+                 <div className="p-6 w-full md:w-1/3 bg-slate-900/50 rounded-r-2xl flex flex-col justify-center">
+                    <p className="text-slate-400 text-xs uppercase font-bold mb-3 flex items-center gap-2">
+                      <Award size={14} /> Earned Badges
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {team.badges.length > 0 ? team.badges.map(badgeId => {
+                         const badge = BADGES[badgeId];
+                         const Icon = badge.icon;
+                         return (
+                           <div key={badgeId} className="group relative p-2 bg-slate-800 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors">
+                              <Icon size={20} className={badge.color} />
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-black text-xs rounded text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                                {badge.label}
+                              </div>
+                           </div>
+                         )
+                      }) : (
+                        <p className="text-slate-600 text-sm italic">No special badges earned.</p>
+                      )}
+                    </div>
+                 </div>
+              </div>
+             )
+          })}
         </div>
 
         <button
           onClick={resetGame}
-          className="bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold py-3 px-8 rounded-xl flex items-center gap-2 transition-all"
+          className="bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold py-4 px-10 rounded-full flex items-center gap-2 transition-all shadow-xl hover:scale-105"
         >
-          <RotateCcw size={20} /> New Simulation
+          <RotateCcw size={20} /> Start New Simulation
         </button>
       </div>
     );
@@ -437,7 +503,7 @@ export default function App() {
                 <span className="text-xs text-slate-400 uppercase font-bold">Round</span>
                 <span className="text-xl font-mono font-bold text-white">{currentRound + 1} <span className="text-slate-600">/ {SCENARIOS.length}</span></span>
              </div>
-             <button onClick={resetGame} className="text-slate-500 hover:text-red-400 transition-colors" title="Reset Game">
+             <button onClick={resetGame} className="text-slate-400 hover:text-red-400 transition-colors" title="Reset Game">
                <RotateCcw size={20} />
              </button>
           </div>
